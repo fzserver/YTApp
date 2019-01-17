@@ -42,19 +42,22 @@ class _AudiosState extends State<Audios> {
 
   playpause(int play, String url, int audioIndex) async {
     int currentAction = 0;
+    int currentPlayingIndex = -1;
     if (play == 0) {
       currentAction = 1;
+      currentPlayingIndex = audioIndex;
       await audioPlayer.play(url);
     } else if (play == 1) {
       currentAction = 2;
       await audioPlayer.pause();
     } else if (play == 2) {
       currentAction = 1;
+      currentPlayingIndex = audioIndex;
       await audioPlayer.resume();
     }
     setState(() {
       playaudio = currentAction;
-      currentPlaying = audioIndex;
+      currentPlaying = currentPlayingIndex;
     });
   }
 
