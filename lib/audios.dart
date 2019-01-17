@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'dart:io';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Audios extends StatefulWidget {
   @override
@@ -14,6 +14,7 @@ class _AudiosState extends State<Audios> {
   AudioPlayer audioPlayer = AudioPlayer();
   bool loading;
   int playaudio;
+  int currentPlaying;
 
   @override
   void initState() {
@@ -29,57 +30,45 @@ class _AudiosState extends State<Audios> {
   }
 
   void fetchListAudio() async {
-    final response = await http.get(
-        'https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
+    final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
     List audios = json.decode(response.body);
     setState(() {
       audioList = audios;
       playaudio = 0;
       loading = false;
+      currentPlaying = -1;
     });
   }
 
-  playpause(int play, String url) async {
-    switch (play) {
-      case 0:
-        {
-          setState(() {
-            playaudio = 1;
-          });
-          await audioPlayer.play(url);
-        }
-        break;
-      case 1:
-        {
-          setState(() {
-            playaudio = 2;
-          });
-          await audioPlayer.pause();
-        }
-        break;
-      case 2:
-        {
-          setState(() {
-            playaudio = 1;
-          });
-          await audioPlayer.resume();
-        }
-        break;
+  playpause(int play, String url, int audioIndex) async {
+    int currentAction = 0;
+    if (play == 0) {
+      currentAction = 1;
+      await audioPlayer.play(url);
+    } else if (play == 1) {
+      currentAction = 2;
+      await audioPlayer.pause();
+    } else if (play == 2) {
+      currentAction = 1;
+      await audioPlayer.resume();
     }
+    setState(() {
+      playaudio = currentAction;
+      currentPlaying = audioIndex;
+    });
   }
 
-  Widget playerIcon() {
-    if (playaudio != 1) {
-      return Icon(
-        Icons.play_arrow,
-        color: Colors.deepOrange,
-      );
-    } else {
+  Widget playerIcon(index) {
+    if(index == currentPlaying) {
       return Icon(
         Icons.pause,
         color: Colors.deepOrangeAccent,
       );
     }
+    return Icon(
+      Icons.play_arrow,
+      color: Colors.deepOrange,
+    );
   }
 
   @override
@@ -99,17 +88,14 @@ class _AudiosState extends State<Audios> {
                   );
                 }
                 return ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) =>
-                      Divider(color: Colors.grey, height: 1.0),
+                  separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey, height: 1.0),
                   itemCount: audioList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text(
-                          '${audioList[index]['title']['rendered'].toString()}'),
+                      title: Text('${audioList[index]['title']['rendered'].toString()}'),
                       trailing: IconButton(
-                        icon: playerIcon(),
-                        onPressed: () => playpause(playaudio,
-                            '${audioList[index]['source_url'].toString()}'),
+                        icon: playerIcon(index),
+                        onPressed: () => playpause(playaudio, '${audioList[index]['source_url'].toString()}', index),
                       ),
                     );
                   },
