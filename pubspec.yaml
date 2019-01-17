@@ -23,6 +23,8 @@ dependencies:
   youtube_player:
   # loadmore:
   # firebase_admob:
+  share:
+  audioplayers:
 
 dev_dependencies:
   flutter_test:
@@ -43,7 +45,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
    - 1.jpg
-  #  - images/a_dot_ham.jpeg
+   - bg.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -4,6 +4,7 @@ import 'package:ytapp/history.dart';
 import 'package:ytapp/homeTab.dart';
 import 'package:ytapp/videos.dart';
 import 'package:ytapp/youtube_data_api.dart';
+import 'package:share/share.dart';
 
 class YTHome extends StatefulWidget {
   @override
@@ -36,8 +37,8 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
           backgroundColor: Colors.deepOrange,
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {},
+              icon: Icon(Icons.share, color: Colors.white,),
+              onPressed: () => Share.share('Check the app https://google.com'),
             ),
           ],
           bottom: TabBar(

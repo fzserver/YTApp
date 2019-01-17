@@ -145,10 +145,10 @@ class _VideosState extends State<Videos> {
                 child: MaterialButton(
                   child: Text("Previous"),
                   onPressed: this._prevPage,
-                  splashColor: Colors.blueAccent,
+                  splashColor: Colors.deepOrangeAccent,
                   height: 30.0,
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                  color: Colors.deepOrange,
+                  textColor: Colors.yellow,
                 ),
               ),
               SizedBox(
@@ -159,10 +159,10 @@ class _VideosState extends State<Videos> {
                 child: MaterialButton(
                   child: Text("Next"),
                   onPressed: this._nextPage,
-                  splashColor: Colors.blueAccent,
+                  splashColor: Colors.deepOrangeAccent,
                   height: 30.0,
-                  color: Colors.blue,
-                  textColor: Colors.white,
+                  color: Colors.deepOrange,
+                  textColor: Colors.yellow,
                 ),
               ),
             ],

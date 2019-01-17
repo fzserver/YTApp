@@ -62,93 +62,107 @@ class _HomeState extends State<Home> {
   //     );
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-        child: Column(
-          children: <Widget>[
-            Center(
-              child: Hero(
-                child: FadeInImage(
-                  image: AssetImage('1.jpg'),
-                  fit: BoxFit.contain,
-                  placeholder: AssetImage('1.jpg'),
-                ),
-                tag: 'Image',
+  Widget build(BuildContext context) => Builder(
+        builder: (BuildContext context) {
+          List<Widget> children = [];
+
+          if (this._loading == true) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          if (this._searchResult == null) {
+            return Center(
+              child: Text("No videos found"),
+            );
+          }
+
+          children.add(
+            Hero(
+              tag: 'DAMDAMI TAKSAL',
+              child: FadeInImage(
+                image: AssetImage('1.jpg'),
+                placeholder: AssetImage('1.jpg'),
+                fit: BoxFit.contain,
               ),
             ),
+          );
+
+          children.add(
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Container(
                 height: 50.0,
                 width: double.infinity,
                 child: Card(
-                  elevation: 2.0,
+                  elevation: 0.0,
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Center(
                       child: Text(
                         'LATEST VIDEOS',
                         style: TextStyle(
-                            color: Colors.deepOrange,
+                            color: Color.fromRGBO(17, 28, 59, 1.0),
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.0),
+                            fontSize: 18.0),
                       ),
                     ),
                   ),
-                  color: Colors.yellow,
+                  color: Colors.white,
                 ),
               ),
             ),
-            Container(
-              child: Expanded(
-                child: Builder(
-                  builder: (BuildContext context) {
-                    if (this._loading == true) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+          );
 
-                    if (this._searchResult == null) {
-                      return Center(
-                        child: Text("No videos found"),
-                      );
-                    }
-                    return ListView.separated(
-                      separatorBuilder: (BuildContext context, int index) =>
-                          Divider(color: Colors.grey, height: 1.0),
-                      itemCount: this._searchResult.items.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundImage: NetworkImage(this
-                                ._searchResult
-                                .items[index]
-                                .mediumThumbnail),
-                          ),
-                          title: Text(this._searchResult.items[index].title),
-                          onTap: () {
-                            // print("VIDEO ID: ${this._searchResult.items[index].id}");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => YTPlayer(
-                                      youtubeapi: ytAPI,
-                                      videoID:
-                                          '${this._searchResult.items[index].id}',
-                                      title:
-                                          '${this._searchResult.items[index].title}',
-                                    ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
-                ),
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: FadeInImage(
+                image: AssetImage('bg.jpg'),
+                placeholder: AssetImage('bg.jpg'),
+                width: 100.0,
+                height: 50.0,
               ),
             ),
-          ],
-        ),
+          );
+
+          children.addAll(_searchResult.items.map((item) {
+            return ListTile(
+              leading: Hero(
+                tag: '${item.title}',
+                child: FadeInImage(
+                  width: 75.0,
+                  height: 60.0,
+                  image: NetworkImage(item.mediumThumbnail),
+                  fit: BoxFit.contain,
+                  placeholder: AssetImage('1.jpg'),
+                ),
+              ),
+              title: Text(item.title),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => YTPlayer(
+                          youtubeapi: ytAPI,
+                          videoID: '${item.id}',
+                          title: '${item.title}',
+                        ),
+                  ),
+                );
+              },
+            );
+          }).toList());
+
+          return ListView.separated(
+            separatorBuilder: (BuildContext context, int index) => Divider(
+                  color: Colors.grey,
+                  height: 1.0,
+                ),
+            itemCount: children.length,
+            itemBuilder: (BuildContext context, int index) => children[index],
+          );
+        },
       );
 }
