@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
@@ -7,11 +8,19 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
+// enum PlayerStatus { Playing, Paused, Resume, Stop }
+
 class _HomeState extends State<Home> {
   static final String ytAPI = 'AIzaSyBVjvKsh8X0W-xjD6kC3I1J5uK1jAF-35E';
   final YouTubeDataAPI _youTubeDataAPI = YouTubeDataAPI(
     apiKey: ytAPI,
   );
+
+  // List audioList;
+  // AudioPlayer audioPlayer = AudioPlayer();
+  // int playaudio;
+  // int currentPlaying;
+  // PlayerStatus _playerStatus;
 
   bool _loading;
   SearchOptions _searchOptions;
@@ -27,6 +36,7 @@ class _HomeState extends State<Home> {
       channelId: "UCsUF4ujGalaBkLzNkbxKW3Q",
     );
     this._search();
+    // fetchListAudio();
   }
 
   void _search() async {
@@ -46,20 +56,56 @@ class _HomeState extends State<Home> {
     });
   }
 
-  // Widget createList() => ListView.builder(
-  //       itemCount: this._searchResult.items.length,
-  //       itemBuilder: (BuildContext context, int index) => createCard(index),
-  //     );
+  //   void fetchListAudio() async {
+  //   final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
+  //   List audios = json.decode(response.body);
+  //   setState(() {
+  //     audioList = audios;
+  //     playaudio = 0;
+  //     loading = false;
+  //     currentPlaying = -1;
+  //     _playerStatus = PlayerStatus.Stop;
+  //   });
+  // }
 
-  // Widget createCard(int index) => Card(
-  //       child: ListTile(
-  //         leading: CircleAvatar(
-  //           backgroundImage:
-  //               NetworkImage(this._searchResult.items[index].mediumThumbnail),
-  //         ),
-  //         title: Text(this._searchResult.items[index].title),
-  //       ),
+  // playpause(String url, int audioIndex) async {
+  //   PlayerStatus _playerStatusUpdate;
+  //   if (audioIndex == currentPlaying) {
+  //     if (_playerStatus == PlayerStatus.Playing) {
+  //       await audioPlayer.pause();
+  //       _playerStatusUpdate = PlayerStatus.Paused;
+  //     } else if (_playerStatus == PlayerStatus.Paused) {
+  //       await audioPlayer.resume();
+  //       _playerStatusUpdate = PlayerStatus.Playing;
+  //     }
+  //   } else {
+  //     await audioPlayer.play(url);
+  //     _playerStatusUpdate = PlayerStatus.Playing;
+  //   }
+  //   setState(() {
+  //     currentPlaying = audioIndex;
+  //     _playerStatus = _playerStatusUpdate;
+  //   });
+  // }
+
+  // Widget playerIcon(index) {
+  //   if (index == currentPlaying && _playerStatus == PlayerStatus.Playing) {
+  //     return Icon(
+  //       Icons.pause,
+  //       color: Colors.deepOrangeAccent,
   //     );
+  //   }
+  //   return Icon(
+  //     Icons.play_arrow,
+  //     color: Colors.deepOrange,
+  //   );
+  // }
+
+  @override
+  void dispose() {
+    // audioPlayer.stop();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => Builder(

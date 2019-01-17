@@ -24,7 +24,7 @@ dependencies:
   # loadmore:
   # firebase_admob:
   share:
-  audioplayers:
+  audioplayers: ^0.8.0
 
 dev_dependencies:
   flutter_test:
