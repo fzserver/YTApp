@@ -4,6 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+enum PlayerStatus { Playing, Paused, Resume, Stop }
+
 class Audios extends StatefulWidget {
   @override
   _AudiosState createState() => _AudiosState();
@@ -15,6 +17,7 @@ class _AudiosState extends State<Audios> {
   bool loading;
   int playaudio;
   int currentPlaying;
+  PlayerStatus _playerStatus;
 
   @override
   void initState() {
@@ -37,32 +40,32 @@ class _AudiosState extends State<Audios> {
       playaudio = 0;
       loading = false;
       currentPlaying = -1;
+      _playerStatus = PlayerStatus.Stop;
     });
   }
 
-  playpause(int play, String url, int audioIndex) async {
-    int currentAction = 0;
-    int currentPlayingIndex = -1;
-    if (play == 0) {
-      currentAction = 1;
-      currentPlayingIndex = audioIndex;
+  playpause(String url, int audioIndex) async {
+    PlayerStatus _playerStatusUpdate;
+    if (audioIndex == currentPlaying) {
+      if (_playerStatus == PlayerStatus.Playing) {
+        await audioPlayer.pause();
+        _playerStatusUpdate = PlayerStatus.Paused;
+      } else if (_playerStatus == PlayerStatus.Paused) {
+        await audioPlayer.resume();
+        _playerStatusUpdate = PlayerStatus.Playing;
+      }
+    } else {
       await audioPlayer.play(url);
-    } else if (play == 1) {
-      currentAction = 2;
-      await audioPlayer.pause();
-    } else if (play == 2) {
-      currentAction = 1;
-      currentPlayingIndex = audioIndex;
-      await audioPlayer.resume();
+      _playerStatusUpdate = PlayerStatus.Playing;
     }
     setState(() {
-      playaudio = currentAction;
-      currentPlaying = currentPlayingIndex;
+      currentPlaying = audioIndex;
+      _playerStatus = _playerStatusUpdate;
     });
   }
 
   Widget playerIcon(index) {
-    if(index == currentPlaying) {
+    if (index == currentPlaying && _playerStatus == PlayerStatus.Playing) {
       return Icon(
         Icons.pause,
         color: Colors.deepOrangeAccent,
@@ -98,7 +101,7 @@ class _AudiosState extends State<Audios> {
                       title: Text('${audioList[index]['title']['rendered'].toString()}'),
                       trailing: IconButton(
                         icon: playerIcon(index),
-                        onPressed: () => playpause(playaudio, '${audioList[index]['source_url'].toString()}', index),
+                        onPressed: () => playpause('${audioList[index]['source_url'].toString()}', index),
                       ),
                     );
                   },
