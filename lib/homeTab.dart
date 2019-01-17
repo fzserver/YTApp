@@ -8,7 +8,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-// enum PlayerStatus { Playing, Paused, Resume, Stop }
+enum PlayerStatus { Playing, Paused, Resume, Stop }
 
 class _HomeState extends State<Home> {
   static final String ytAPI = 'AIzaSyBVjvKsh8X0W-xjD6kC3I1J5uK1jAF-35E';
