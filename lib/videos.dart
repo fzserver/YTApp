@@ -34,11 +34,7 @@ class _VideosState extends State<Videos> {
       this._loading = true;
     });
 
-    this
-        ._youTubeDataAPI
-        .videos
-        .search(null, options: this._searchOptions)
-        .then((result) {
+    this._youTubeDataAPI.videos.search(null, options: this._searchOptions).then((result) {
       setState(() {
         this._searchResult = result;
         this._loading = false;
@@ -51,14 +47,7 @@ class _VideosState extends State<Videos> {
       this._loading = true;
     });
 
-    this
-        ._youTubeDataAPI
-        .videos
-        .search(null,
-            options: this
-                ._searchOptions
-                .copyWith(pageToken: this._searchResult.prevPageToken))
-        .then((result) {
+    this._youTubeDataAPI.videos.search(null, options: this._searchOptions.copyWith(pageToken: this._searchResult.prevPageToken)).then((result) {
       setState(() {
         this._searchResult = result;
         this._loading = false;
@@ -71,14 +60,7 @@ class _VideosState extends State<Videos> {
       this._loading = true;
     });
 
-    this
-        ._youTubeDataAPI
-        .videos
-        .search(null,
-            options: this
-                ._searchOptions
-                .copyWith(pageToken: this._searchResult.nextPageToken))
-        .then((result) {
+    this._youTubeDataAPI.videos.search(null, options: this._searchOptions.copyWith(pageToken: this._searchResult.nextPageToken)).then((result) {
       setState(() {
         this._searchResult = result;
         this._loading = false;
@@ -106,21 +88,17 @@ class _VideosState extends State<Videos> {
               }
 
               return ListView.separated(
-                separatorBuilder: (BuildContext context, int index) =>
-                    Divider(color: Colors.grey, height: 1.0),
+                separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey, height: 1.0),
                 itemCount: this._searchResult.items.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    leading: Hero(
-                tag: '${this._searchResult.items[index].title}',
-                child: FadeInImage(
-                  width: 75.0,
-                  height: 60.0,
-                  image: NetworkImage(this._searchResult.items[index].mediumThumbnail),
-                  fit: BoxFit.contain,
-                  placeholder: AssetImage('1.jpg'),
-                ),
-              ),
+                    leading: FadeInImage(
+                      width: 75.0,
+                      height: 60.0,
+                      image: NetworkImage(this._searchResult.items[index].mediumThumbnail),
+                      fit: BoxFit.contain,
+                      placeholder: AssetImage('1.jpg'),
+                    ),
                     title: Text(this._searchResult.items[index].title),
                     onTap: () {
                       // print("VIDEO ID: ${this._searchResult.items[index].id}");
