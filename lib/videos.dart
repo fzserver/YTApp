@@ -129,8 +129,7 @@ class _VideosState extends State<Videos> {
                         MaterialPageRoute(
                           builder: (context) => YTPlayer(
                                 youtubeapi: ytAPI,
-                                videoID:
-                                    '${this._searchResult.items[index].id}',
+                                videoID: '${this._searchResult.items[index].id}',
                                 title: '${this._searchResult.items[index].title}',
                               ),
                         ),

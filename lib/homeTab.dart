@@ -209,15 +209,12 @@ class HomeTabVideoList extends StatelessWidget {
       return Column(
         children: <Widget>[
           ListTile(
-            leading: Hero(
-              tag: '${item.title}',
-              child: FadeInImage(
-                width: 75.0,
-                height: 60.0,
-                image: NetworkImage(item.mediumThumbnail),
-                fit: BoxFit.contain,
-                placeholder: AssetImage('1.jpg'),
-              ),
+            leading: FadeInImage(
+              width: 75.0,
+              height: 60.0,
+              image: NetworkImage(item.mediumThumbnail),
+              fit: BoxFit.contain,
+              placeholder: AssetImage('1.jpg'),
             ),
             title: Text(item.title),
             onTap: () {
@@ -265,15 +262,12 @@ class HomeTabAudioList extends StatelessWidget {
       return Column(
         children: <Widget>[
           ListTile(
-            leading: Hero(
-              tag: '${audio['title']['rendered'].toString()}',
-              child: FadeInImage(
-                width: 50.0,
-                height: 50.0,
-                image: AssetImage('album.png'),
-                fit: BoxFit.contain,
-                placeholder: AssetImage('album.png'),
-              ),
+            leading: FadeInImage(
+              width: 50.0,
+              height: 50.0,
+              image: AssetImage('album.png'),
+              fit: BoxFit.contain,
+              placeholder: AssetImage('album.png'),
             ),
             title: Text('${audio['title']['rendered'].toString()}'),
             trailing: IconButton(
