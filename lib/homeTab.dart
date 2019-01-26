@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
+import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -16,11 +19,11 @@ class _HomeState extends State<Home> {
     apiKey: ytAPI,
   );
 
-  // List audioList;
-  // AudioPlayer audioPlayer = AudioPlayer();
-  // int playaudio;
-  // int currentPlaying;
-  // PlayerStatus _playerStatus;
+  List audioList;
+  AudioPlayer audioPlayer = AudioPlayer();
+  int playaudio;
+  int currentPlaying;
+  PlayerStatus _playerStatus;
 
   bool _loading;
   SearchOptions _searchOptions;
@@ -36,7 +39,7 @@ class _HomeState extends State<Home> {
       channelId: "UCsUF4ujGalaBkLzNkbxKW3Q",
     );
     this._search();
-    // fetchListAudio();
+    fetchListAudio();
   }
 
   void _search() async {
@@ -56,54 +59,54 @@ class _HomeState extends State<Home> {
     });
   }
 
-  //   void fetchListAudio() async {
-  //   final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
-  //   List audios = json.decode(response.body);
-  //   setState(() {
-  //     audioList = audios;
-  //     playaudio = 0;
-  //     loading = false;
-  //     currentPlaying = -1;
-  //     _playerStatus = PlayerStatus.Stop;
-  //   });
-  // }
+  void fetchListAudio() async {
+    final response = await http.get(
+        'https://damdamitaksal.net/wp-json/wp/v2/media?per_page=5&media_type=audio');
+    List audios = json.decode(response.body);
+    setState(() {
+      audioList = audios;
+      playaudio = 0;
+      currentPlaying = -1;
+      _playerStatus = PlayerStatus.Stop;
+    });
+  }
 
-  // playpause(String url, int audioIndex) async {
-  //   PlayerStatus _playerStatusUpdate;
-  //   if (audioIndex == currentPlaying) {
-  //     if (_playerStatus == PlayerStatus.Playing) {
-  //       await audioPlayer.pause();
-  //       _playerStatusUpdate = PlayerStatus.Paused;
-  //     } else if (_playerStatus == PlayerStatus.Paused) {
-  //       await audioPlayer.resume();
-  //       _playerStatusUpdate = PlayerStatus.Playing;
-  //     }
-  //   } else {
-  //     await audioPlayer.play(url);
-  //     _playerStatusUpdate = PlayerStatus.Playing;
-  //   }
-  //   setState(() {
-  //     currentPlaying = audioIndex;
-  //     _playerStatus = _playerStatusUpdate;
-  //   });
-  // }
+  playpause(String url, int audioIndex) async {
+    PlayerStatus _playerStatusUpdate;
+    if (audioIndex == currentPlaying) {
+      if (_playerStatus == PlayerStatus.Playing) {
+        await audioPlayer.pause();
+        _playerStatusUpdate = PlayerStatus.Paused;
+      } else if (_playerStatus == PlayerStatus.Paused) {
+        await audioPlayer.resume();
+        _playerStatusUpdate = PlayerStatus.Playing;
+      }
+    } else {
+      await audioPlayer.play(url);
+      _playerStatusUpdate = PlayerStatus.Playing;
+    }
+    setState(() {
+      currentPlaying = audioIndex;
+      _playerStatus = _playerStatusUpdate;
+    });
+  }
 
-  // Widget playerIcon(index) {
-  //   if (index == currentPlaying && _playerStatus == PlayerStatus.Playing) {
-  //     return Icon(
-  //       Icons.pause,
-  //       color: Colors.deepOrangeAccent,
-  //     );
-  //   }
-  //   return Icon(
-  //     Icons.play_arrow,
-  //     color: Colors.deepOrange,
-  //   );
-  // }
+  Widget playerIcon(index) {
+    if (index == currentPlaying && _playerStatus == PlayerStatus.Playing) {
+      return Icon(
+        Icons.pause,
+        color: Colors.deepOrangeAccent,
+      );
+    }
+    return Icon(
+      Icons.play_arrow,
+      color: Colors.deepOrange,
+    );
+  }
 
   @override
   void dispose() {
-    // audioPlayer.stop();
+    audioPlayer.stop();
     super.dispose();
   }
 
@@ -115,12 +118,6 @@ class _HomeState extends State<Home> {
           if (this._loading == true) {
             return Center(
               child: CircularProgressIndicator(),
-            );
-          }
-
-          if (this._searchResult == null) {
-            return Center(
-              child: Text("No videos found"),
             );
           }
 
@@ -173,33 +170,142 @@ class _HomeState extends State<Home> {
             ),
           );
 
-          children.addAll(_searchResult.items.map((item) {
-            return ListTile(
-              leading: Hero(
-                tag: '${item.title}',
-                child: FadeInImage(
-                  width: 75.0,
-                  height: 60.0,
-                  image: NetworkImage(item.mediumThumbnail),
-                  fit: BoxFit.contain,
-                  placeholder: AssetImage('1.jpg'),
+          if (this._searchResult == null) {
+            children.add(Center(
+              child: Text("No videos found"),
+            ));
+          } else {
+            children.addAll(_searchResult.items.map((item) {
+              return ListTile(
+                leading: Hero(
+                  tag: '${item.title}',
+                  child: FadeInImage(
+                    width: 75.0,
+                    height: 60.0,
+                    image: NetworkImage(item.mediumThumbnail),
+                    fit: BoxFit.contain,
+                    placeholder: AssetImage('1.jpg'),
+                  ),
+                ),
+                title: Text(item.title),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => YTPlayer(
+                            youtubeapi: ytAPI,
+                            videoID: '${item.id}',
+                            title: '${item.title}',
+                          ),
+                    ),
+                  );
+                },
+              );
+            }).toList());
+          }
+
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
+                height: 50.0,
+                width: double.infinity,
+                child: Card(
+                  elevation: 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Text(
+                        'LATEST AUDIOS',
+                        style: TextStyle(
+                            color: Color.fromRGBO(17, 28, 59, 1.0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  color: Colors.white,
                 ),
               ),
-              title: Text(item.title),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => YTPlayer(
-                          youtubeapi: ytAPI,
-                          videoID: '${item.id}',
-                          title: '${item.title}',
-                        ),
+            ),
+          );
+
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: FadeInImage(
+                image: AssetImage('bg.jpg'),
+                placeholder: AssetImage('bg.jpg'),
+                width: 100.0,
+                height: 50.0,
+              ),
+            ),
+          );
+
+          if (audioList == null) {
+            children.add(Center(
+              child: Text('No Audios Found.'),
+            ));
+          } else {
+            children.addAll(audioList.map((audio) {
+              return ListTile(
+                leading: Hero(
+                  tag: '${audio['title']['rendered'].toString()}',
+                  child: FadeInImage(
+                    width: 50.0,
+                    height: 50.0,
+                    image: AssetImage('album.png'),
+                    fit: BoxFit.contain,
+                    placeholder: AssetImage('album.png'),
                   ),
-                );
-              },
-            );
-          }).toList());
+                ),
+                title: Text('${audio['title']['rendered'].toString()}'),
+                trailing: IconButton(
+                  icon: playerIcon(audio['id']),
+                  onPressed: () => playpause(
+                      '${audio['source_url'].toString()}', audio['id']),
+                ),
+              );
+            }).toList());
+          }
+
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Container(
+                height: 50.0,
+                width: double.infinity,
+                child: Card(
+                  elevation: 0.0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Center(
+                      child: Text(
+                        'UPCOMING UPDATES/EVENTS',
+                        style: TextStyle(
+                            color: Color.fromRGBO(17, 28, 59, 1.0),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0),
+                      ),
+                    ),
+                  ),
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          );
+
+          children.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 2.0),
+              child: FadeInImage(
+                image: AssetImage('bg.jpg'),
+                placeholder: AssetImage('bg.jpg'),
+                width: 100.0,
+                height: 50.0,
+              ),
+            ),
+          );
 
           return ListView.separated(
             separatorBuilder: (BuildContext context, int index) => Divider(

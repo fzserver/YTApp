@@ -8,7 +8,7 @@ class YTAPP extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
     debugShowCheckedModeBanner: true,
     theme: ThemeData(primaryColor: Colors.white, accentColor: Colors.black),
-    title: "Youtube Channel",
+    title: "DAMDAMI TAKSAL",
     home: YTHome(),
   );
 }

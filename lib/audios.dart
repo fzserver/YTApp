@@ -33,7 +33,8 @@ class _AudiosState extends State<Audios> {
   }
 
   void fetchListAudio() async {
-    final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
+    final response = await http.get(
+        'https://damdamitaksal.net/wp-json/wp/v2/media?per_page=20&media_type=audio');
     List audios = json.decode(response.body);
     setState(() {
       audioList = audios;
@@ -94,14 +95,29 @@ class _AudiosState extends State<Audios> {
                   );
                 }
                 return ListView.separated(
-                  separatorBuilder: (BuildContext context, int index) => Divider(color: Colors.grey, height: 1.0),
+                  separatorBuilder: (BuildContext context, int index) =>
+                      Divider(color: Colors.grey, height: 1.0),
                   itemCount: audioList.length,
                   itemBuilder: (BuildContext context, int index) {
                     return ListTile(
-                      title: Text('${audioList[index]['title']['rendered'].toString()}'),
+                      leading: Hero(
+                        tag:
+                            '${audioList[index]['title']['rendered'].toString()}',
+                        child: FadeInImage(
+                          width: 50.0,
+                          height: 50.0,
+                          image: AssetImage('album.png'),
+                          fit: BoxFit.contain,
+                          placeholder: AssetImage('album.png'),
+                        ),
+                      ),
+                      title: Text(
+                          '${audioList[index]['title']['rendered'].toString()}'),
                       trailing: IconButton(
                         icon: playerIcon(index),
-                        onPressed: () => playpause('${audioList[index]['source_url'].toString()}', index),
+                        onPressed: () => playpause(
+                            '${audioList[index]['source_url'].toString()}',
+                            index),
                       ),
                     );
                   },

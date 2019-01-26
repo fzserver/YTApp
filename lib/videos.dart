@@ -111,10 +111,16 @@ class _VideosState extends State<Videos> {
                 itemCount: this._searchResult.items.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          this._searchResult.items[index].mediumThumbnail),
-                    ),
+                    leading: Hero(
+                tag: '${this._searchResult.items[index].title}',
+                child: FadeInImage(
+                  width: 75.0,
+                  height: 60.0,
+                  image: NetworkImage(this._searchResult.items[index].mediumThumbnail),
+                  fit: BoxFit.contain,
+                  placeholder: AssetImage('1.jpg'),
+                ),
+              ),
                     title: Text(this._searchResult.items[index].title),
                     onTap: () {
                       // print("VIDEO ID: ${this._searchResult.items[index].id}");
