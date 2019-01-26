@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:marquee/marquee.dart';
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
 
@@ -120,6 +121,15 @@ class _HomeState extends State<Home> {
                 image: AssetImage('1.jpg'),
                 placeholder: AssetImage('1.jpg'),
                 fit: BoxFit.contain,
+              ),
+              Container(
+                height: 20.0+2.0,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 2.0),
+                  child: Marquee(
+                    text: 'Test Marquee Test Marquee Test Marquee Test Marquee Test Marquee Test Marquee ',
+                  ),
+                ),
               ),
               title("LATEST VIDEOS"),
               bgImage(),
@@ -264,7 +274,10 @@ class HomeTabAudioList extends StatelessWidget {
               onPressed: () => playpause('${audio['source_url'].toString()}', audio['id']),
             ),
           ),
-          Container(color: Colors.grey,height: 0.5,)
+          Container(
+            color: Colors.grey,
+            height: 0.5,
+          )
         ],
       );
     }).toList();
