@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_player/youtube_player.dart';
 
 class YTPlayer extends StatefulWidget {
@@ -15,6 +16,7 @@ class YTPlayer extends StatefulWidget {
 class _YTPlayerState extends State<YTPlayer> {
   @override
   void dispose() {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -30,6 +32,12 @@ class _YTPlayerState extends State<YTPlayer> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return OrientationBuilder(
       builder: (context, orientation) {
         if (orientation == Orientation.portrait) {
@@ -81,4 +89,5 @@ class _YTPlayerState extends State<YTPlayer> {
       },
     );
   }
+
 }
