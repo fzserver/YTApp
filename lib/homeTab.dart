@@ -123,11 +123,13 @@ class _HomeState extends State<Home> {
                 fit: BoxFit.contain,
               ),
               Container(
-                height: 20.0+2.0,
+                color: Colors.deepOrange,
+                height: 20.0,
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.0),
                   child: Marquee(
                     text: 'Test Marquee Test Marquee Test Marquee Test Marquee Test Marquee Test Marquee ',
+                    style: TextStyle(color: Colors.yellow),
                   ),
                 ),
               ),
@@ -155,15 +157,20 @@ class _HomeState extends State<Home> {
 
   Padding title(String title) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            title,
-            style: TextStyle(color: Color.fromRGBO(17, 28, 59, 1.0), fontWeight: FontWeight.bold, fontSize: 18.0),
-          )
-        ],
+      padding: EdgeInsets.symmetric(vertical: 2.0),
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(color: Color.fromRGBO(17, 28, 59, 1.0), fontWeight: FontWeight.bold, fontSize: 18.0),
+              )
+            ],
+          ),
+        ),
       ),
     );
   }
