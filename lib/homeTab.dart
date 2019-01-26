@@ -2,9 +2,9 @@ import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
-import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -19,7 +19,7 @@ class _HomeState extends State<Home> {
     apiKey: ytAPI,
   );
 
-  List audioList;
+  List audioList = [];
   AudioPlayer audioPlayer = AudioPlayer();
   int playaudio;
   int currentPlaying;
@@ -47,11 +47,7 @@ class _HomeState extends State<Home> {
       this._loading = true;
     });
 
-    this
-        ._youTubeDataAPI
-        .videos
-        .search(null, options: this._searchOptions)
-        .then((result) {
+    this._youTubeDataAPI.videos.search(null, options: this._searchOptions).then((result) {
       setState(() {
         this._searchResult = result;
         this._loading = false;
@@ -60,8 +56,7 @@ class _HomeState extends State<Home> {
   }
 
   void fetchListAudio() async {
-    final response = await http.get(
-        'https://damdamitaksal.net/wp-json/wp/v2/media?per_page=5&media_type=audio');
+    final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=5&media_type=audio');
     List audios = json.decode(response.body);
     setState(() {
       audioList = audios;
@@ -111,210 +106,167 @@ class _HomeState extends State<Home> {
   }
 
   @override
-  Widget build(BuildContext context) => Builder(
-        builder: (BuildContext context) {
-          List<Widget> children = [];
-
-          if (this._loading == true) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          children.add(
-            Hero(
-              tag: 'DAMDAMI TAKSAL',
-              child: FadeInImage(
+  Widget build(BuildContext context) {
+    if (_loading) {
+      return Center(child: CircularProgressIndicator());
+    }
+    return Container(
+      color: Color.fromRGBO(247, 247, 247, 1.0), // List Image isn't clear so match it with that background
+      child: Scrollbar(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              FadeInImage(
                 image: AssetImage('1.jpg'),
                 placeholder: AssetImage('1.jpg'),
                 fit: BoxFit.contain,
               ),
-            ),
-          );
-
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                height: 50.0,
-                width: double.infinity,
-                child: Card(
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Text(
-                        'LATEST VIDEOS',
-                        style: TextStyle(
-                            color: Color.fromRGBO(17, 28, 59, 1.0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ),
-                  ),
-                  color: Colors.white,
-                ),
+              title("LATEST VIDEOS"),
+              bgImage(),
+              HomeTabVideoList(
+                data: _searchResult,
+                ytApi: ytAPI,
               ),
-            ),
-          );
-
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: FadeInImage(
-                image: AssetImage('bg.jpg'),
-                placeholder: AssetImage('bg.jpg'),
-                width: 100.0,
-                height: 50.0,
+              title("LATEST AUDIOS"),
+              bgImage(),
+              HomeTabAudioList(
+                audioList: audioList,
+                playerIcon: (index) => playerIcon(index),
+                playpause: (url, audioIndex) => playpause(url, audioIndex),
               ),
-            ),
-          );
+              title("UPCOMING UPDATES/EVENTS"),
+              bgImage()
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
-          if (this._searchResult == null) {
-            children.add(Center(
-              child: Text("No videos found"),
-            ));
-          } else {
-            children.addAll(_searchResult.items.map((item) {
-              return ListTile(
-                leading: Hero(
-                  tag: '${item.title}',
-                  child: FadeInImage(
-                    width: 75.0,
-                    height: 60.0,
-                    image: NetworkImage(item.mediumThumbnail),
-                    fit: BoxFit.contain,
-                    placeholder: AssetImage('1.jpg'),
-                  ),
-                ),
-                title: Text(item.title),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => YTPlayer(
-                            youtubeapi: ytAPI,
-                            videoID: '${item.id}',
-                            title: '${item.title}',
-                          ),
-                    ),
-                  );
-                },
-              );
-            }).toList());
-          }
+  Padding title(String title) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(color: Color.fromRGBO(17, 28, 59, 1.0), fontWeight: FontWeight.bold, fontSize: 18.0),
+          )
+        ],
+      ),
+    );
+  }
 
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                height: 50.0,
-                width: double.infinity,
-                child: Card(
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Text(
-                        'LATEST AUDIOS',
-                        style: TextStyle(
-                            color: Color.fromRGBO(17, 28, 59, 1.0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ),
-                  ),
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          );
+  FadeInImage bgImage() {
+    return FadeInImage(
+      image: AssetImage('bg.jpg'),
+      placeholder: AssetImage('bg.jpg'),
+      width: MediaQuery.of(context).size.width,
+      height: 50.0,
+      fit: BoxFit.contain,
+    );
+  }
+}
 
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: FadeInImage(
-                image: AssetImage('bg.jpg'),
-                placeholder: AssetImage('bg.jpg'),
-                width: 100.0,
-                height: 50.0,
-              ),
-            ),
-          );
+class HomeTabVideoList extends StatelessWidget {
+  final SearchResultModel data;
+  final String ytApi;
 
-          if (audioList == null) {
-            children.add(Center(
-              child: Text('No Audios Found.'),
-            ));
-          } else {
-            children.addAll(audioList.map((audio) {
-              return ListTile(
-                leading: Hero(
-                  tag: '${audio['title']['rendered'].toString()}',
-                  child: FadeInImage(
-                    width: 50.0,
-                    height: 50.0,
-                    image: AssetImage('album.png'),
-                    fit: BoxFit.contain,
-                    placeholder: AssetImage('album.png'),
-                  ),
-                ),
-                title: Text('${audio['title']['rendered'].toString()}'),
-                trailing: IconButton(
-                  icon: playerIcon(audio['id']),
-                  onPressed: () => playpause(
-                      '${audio['source_url'].toString()}', audio['id']),
-                ),
-              );
-            }).toList());
-          }
+  const HomeTabVideoList({Key key, this.data, this.ytApi}) : super(key: key);
 
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Container(
-                height: 50.0,
-                width: double.infinity,
-                child: Card(
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Center(
-                      child: Text(
-                        'UPCOMING UPDATES/EVENTS',
-                        style: TextStyle(
-                            color: Color.fromRGBO(17, 28, 59, 1.0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0),
-                      ),
-                    ),
-                  ),
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          );
-
-          children.add(
-            Padding(
-              padding: const EdgeInsets.only(top: 2.0),
-              child: FadeInImage(
-                image: AssetImage('bg.jpg'),
-                placeholder: AssetImage('bg.jpg'),
-                width: 100.0,
-                height: 50.0,
-              ),
-            ),
-          );
-
-          return ListView.separated(
-            separatorBuilder: (BuildContext context, int index) => Divider(
-                  color: Colors.grey,
-                  height: 1.0,
-                ),
-            itemCount: children.length,
-            itemBuilder: (BuildContext context, int index) => children[index],
-          );
-        },
+  @override
+  Widget build(BuildContext context) {
+    if (data != null) {
+      return Column(
+        children: _generateList(context),
       );
+    }
+    return Center(
+      child: Text("No videos found"),
+    );
+  }
+
+  List<Widget> _generateList(context) {
+    return data.items.map((item) {
+      return Column(
+        children: <Widget>[
+          ListTile(
+            leading: Hero(
+              tag: '${item.title}',
+              child: FadeInImage(
+                width: 75.0,
+                height: 60.0,
+                image: NetworkImage(item.mediumThumbnail),
+                fit: BoxFit.contain,
+                placeholder: AssetImage('1.jpg'),
+              ),
+            ),
+            title: Text(item.title),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => YTPlayer(
+                        youtubeapi: ytApi,
+                        videoID: '${item.id}',
+                        title: '${item.title}',
+                      ),
+                ),
+              );
+            },
+          ),
+          Container(
+            color: Colors.grey,
+            height: 0.5,
+          )
+        ],
+      );
+    }).toList();
+  }
+}
+
+class HomeTabAudioList extends StatelessWidget {
+  final List audioList;
+  final Function playerIcon;
+  final Function playpause;
+
+  const HomeTabAudioList({Key key, this.audioList, this.playerIcon, this.playpause}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (audioList.length < 1) {
+      return Center();
+    }
+    return Column(
+      children: _generateList(),
+    );
+  }
+
+  List<Widget> _generateList() {
+    return audioList.map((audio) {
+      return Column(
+        children: <Widget>[
+          ListTile(
+            leading: Hero(
+              tag: '${audio['title']['rendered'].toString()}',
+              child: FadeInImage(
+                width: 50.0,
+                height: 50.0,
+                image: AssetImage('album.png'),
+                fit: BoxFit.contain,
+                placeholder: AssetImage('album.png'),
+              ),
+            ),
+            title: Text('${audio['title']['rendered'].toString()}'),
+            trailing: IconButton(
+              icon: playerIcon(audio['id']),
+              onPressed: () => playpause('${audio['source_url'].toString()}', audio['id']),
+            ),
+          ),
+          Container(color: Colors.grey,height: 0.5,)
+        ],
+      );
+    }).toList();
+  }
 }
