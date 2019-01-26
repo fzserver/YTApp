@@ -10,7 +10,7 @@ description: Youtube Player App.
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: "<3.0.0"
 
 dependencies:
   flutter:
@@ -19,11 +19,11 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  http:
-  youtube_player:
+  http: ^0.12.0+1
+  youtube_player: ^0.6.1
   # loadmore:
   # firebase_admob:
-  share:
+  share: ^0.6.0
   audioplayers: ^0.8.0
   flutter_launcher_icons: ^0.7.0
 
