@@ -3,9 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:youtube_player/youtube_player.dart';
 
 class YTPlayer extends StatefulWidget {
-  String youtubeapi;
-  String videoID;
-  String title;
+  final String youtubeapi;
+  final String videoID;
+  final String title;
 
   YTPlayer({this.youtubeapi, this.videoID, this.title});
 
