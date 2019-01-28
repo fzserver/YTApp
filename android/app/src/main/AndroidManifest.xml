@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.fl.ytapp">
 
     <!-- The INTERNET permission is required for development. Specifically,
@@ -15,6 +16,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="Damdami Taksal"
+        tools:replace="android:label"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
