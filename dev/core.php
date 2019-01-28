@@ -15,19 +15,16 @@ class ResizeImage {
 
          $this->image = imagecreatefromgif($filename);
       } elseif( $this->image_type == IMAGETYPE_PNG ) {
-
          $this->image = imagecreatefrompng($filename);
       }
    }
    function save($filename, $image_type=IMAGETYPE_JPEG, $compression=75, $permissions=null) {
-
       if( $image_type == IMAGETYPE_JPEG ) {
          imagejpeg($this->image,$filename,$compression);
       } elseif( $image_type == IMAGETYPE_GIF ) {
 
          imagegif($this->image,$filename);
       } elseif( $image_type == IMAGETYPE_PNG ) {
-
          imagepng($this->image,$filename);
       }
       if( $permissions != null) {
@@ -76,6 +73,8 @@ class ResizeImage {
 
    function resize($width,$height) {
       $new_image = imagecreatetruecolor($width, $height);
+      imagealphablending($new_image, false);
+      imagesavealpha($new_image, true);
       imagecopyresampled($new_image, $this->image, 0, 0, 0, 0, $width, $height, $this->getWidth(), $this->getHeight());
       $this->image = $new_image;
    }
