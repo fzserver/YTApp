@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:youtube_player/youtube_player.dart';
+import 'package:youtube_player/yp_chewie.dart';
 
 class YTPlayer extends StatefulWidget {
   final String youtubeapi;
@@ -14,6 +15,7 @@ class YTPlayer extends StatefulWidget {
 }
 
 class _YTPlayerState extends State<YTPlayer> {
+  YoutubePlayerController _controller;
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
@@ -26,6 +28,9 @@ class _YTPlayerState extends State<YTPlayer> {
         source: widget.videoID,
         quality: YoutubeQuality.HD,
         showThumbnail: true,
+        callbackController: (controller) {
+          _controller = controller;
+        },
       ),
     );
   }
