@@ -12,7 +12,7 @@ if ($height < 500 || $width < 500) {
     error_message("Image resolution should be atleast 500x500");
 }
 
-$idle_size = $height > 500 ? 500/4 : $height / 4;
+$idle_size = $height > 1200 ? 1200/4 : $height / 4;
 store_uploaded_image($image_name, $idle_size, $idle_size, "mipmap-mdpi",$type);
 store_uploaded_image($image_name, $idle_size * 1.5, $idle_size * 1.5, "mipmap-hdpi",$type);
 store_uploaded_image($image_name, $idle_size * 2, $idle_size * 2, "mipmap-xhdpi",$type);

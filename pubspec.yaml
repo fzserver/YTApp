@@ -20,7 +20,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   http: ^0.12.0+1
-  youtube_player: ^0.6.1
+  youtube_player: ^0.7.1
   # loadmore:
   # firebase_admob:
   share: ^0.6.0
