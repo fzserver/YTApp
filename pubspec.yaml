@@ -54,6 +54,7 @@ flutter:
    - 1.jpg
    - bg.jpg
    - album.png
+   - babaji.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.
