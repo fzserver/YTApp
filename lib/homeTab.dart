@@ -118,8 +118,8 @@ class _HomeState extends State<Home> {
           child: Column(
             children: <Widget>[
               FadeInImage(
-                image: AssetImage('1.jpg'),
-                placeholder: AssetImage('1.jpg'),
+                image: AssetImage('babaji.png'),
+                placeholder: AssetImage('babaji.png'),
                 fit: BoxFit.contain,
               ),
               Container(
