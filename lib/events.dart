@@ -16,7 +16,7 @@ class _EventsState extends State<Events> {
   List posts;
 
   // Function to fetch list of posts
-  Future<String> getPosts() async {
+  getPosts() async {
     var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed"),
         headers: {"Accept": "application/json"});
 
@@ -48,18 +48,17 @@ class _EventsState extends State<Events> {
                   FadeInImage.memoryNetwork(
                     placeholder: transparentImage,
                     image: posts[index]["featured_media"] == 0
-                        ? 'images/placeholder.png'
+                        ? AssetImage('placeholder.jpg')
                         : posts[index]["_embedded"]["wp:featuredmedia"][0]
                             ["source_url"],
                   ),
                   Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: new ListTile(
-                      title: new Padding(
+                    child: ListTile(
+                      title: Padding(
                           padding: EdgeInsets.symmetric(vertical: 10.0),
-                          child: new Text(posts[index]["title"]["rendered"])),
-                      subtitle: new Text(posts[index]["excerpt"]["rendered"]
-                          .replaceAll(new RegExp(r'<[^>]*>'), '')),
+                          child: Text(posts[index]["title"]["rendered"])),
+                      subtitle: Text(posts[index]["excerpt"]["rendered"].replaceAll(RegExp(r'<[^>]*>'), '')),
                     ),
                   )
                 ],

@@ -3,9 +3,12 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:marquee/marquee.dart';
+import 'package:ytapp/transparent.dart';
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
+import 'package:audioplayers/audio_cache.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -22,9 +25,11 @@ class _HomeState extends State<Home> {
 
   List audioList = [];
   AudioPlayer audioPlayer = AudioPlayer();
+  // AudioCache prayer = AudioCache();
   int playaudio;
   int currentPlaying;
   PlayerStatus _playerStatus;
+  // String localFilePath;
 
   bool _loading;
   SearchOptions _searchOptions;
@@ -53,6 +58,23 @@ class _HomeState extends State<Home> {
         this._searchResult = result;
         this._loading = false;
       });
+    });
+  }
+
+    // Base URL for our wordpress API
+  final String apiUrl = "https://damdamitaksal.net/wp-json/wp/v2/";
+  // Empty list for our posts
+  List posts = [];
+
+  // Function to fetch list of posts
+  void getPosts() async {
+    var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed"),
+        headers: {"Accept": "application/json"});
+
+    // fill our posts list with results and update state
+    setState(() {
+      var resBody = json.decode(res.body);
+      posts = resBody;
     });
   }
 
@@ -153,7 +175,10 @@ class _HomeState extends State<Home> {
                 playpause: (url, audioIndex) => playpause(url, audioIndex),
               ),
               title("UPCOMING UPDATES/EVENTS"),
-              bgImage()
+              bgImage(),
+              HomeTabEventList(
+                eventsList: posts
+              ),
             ],
           ),
         ),
@@ -290,3 +315,38 @@ class HomeTabAudioList extends StatelessWidget {
     }).toList();
   }
 }
+
+class HomeTabEventList extends StatelessWidget {
+  final List eventsList;
+
+  const HomeTabEventList({Key key, this.eventsList}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (eventsList.length < 1) {
+      return Center();
+    }
+    return Column(children: _generatePosts(),);
+  }
+
+    List<Widget> _generatePosts() {
+    return eventsList.map((event) {
+      return Column(
+        children: <Widget>[
+          ListTile(
+            leading: FadeInImage.memoryNetwork(
+              width: 50.0,
+              height: 50.0,
+              image: event['featured_media'] == 0 ? AssetImage('placeholder.jpg')
+              : event["_embedded"]["wp:featuredmedia"][0]["source_url"],
+              fit: BoxFit.contain,
+              placeholder: transparentImage,
+            ),
+            title: Text(event["title"]["rendered"]),
+            subtitle: Text(event["excerpt"]["rendered"].replaceAll(RegExp(r'<[^>]*>'), '')),
+          )
+        ],
+      );
+    }).toList();
+    }
+    }

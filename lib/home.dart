@@ -1,3 +1,4 @@
+import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
@@ -15,11 +16,25 @@ class YTHome extends StatefulWidget {
 
 class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
   static TabController _tabController;
+  String localFilePath;
+  AudioCache prayer = AudioCache();
+
+  playPrayer() async {
+    // localFilePath = 'assets/audio.m4v';
+    await prayer.play('audio.mp3');
+  }
 
   @override
   void initState() {
     super.initState();
+    playPrayer();
     _tabController = TabController(vsync: this, initialIndex: 0, length: 6);
+  }
+
+  @override
+  void dispose() {
+    prayer.clear('audio.mp3');
+    super.dispose();
   }
 
   // final YouTubeDataAPI _youTubeDataAPI = YouTubeDataAPI(
@@ -28,7 +43,8 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarBrightness: Brightness.light));
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light
+        .copyWith(statusBarBrightness: Brightness.light));
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Color(0xfff8faf8),
@@ -45,7 +61,8 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
               Icons.share,
               color: Colors.white,
             ),
-            onPressed: () => Share.share('Check the app https://damdamitaksal.net'),
+            onPressed: () =>
+                Share.share('Check the app https://damdamitaksal.net'),
           ),
         ],
         bottom: TabBar(
