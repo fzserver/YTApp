@@ -48,7 +48,7 @@ class _EventsState extends State<Events> {
                   FadeInImage.memoryNetwork(
                     placeholder: transparentImage,
                     image: posts[index]["featured_media"] == 0
-                        ? AssetImage('placeholder.jpg')
+                        ? 'assets/placeholder.jpg'
                         : posts[index]["_embedded"]["wp:featuredmedia"][0]
                             ["source_url"],
                   ),

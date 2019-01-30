@@ -337,7 +337,7 @@ class HomeTabEventList extends StatelessWidget {
             leading: FadeInImage.memoryNetwork(
               width: 50.0,
               height: 50.0,
-              image: event['featured_media'] == 0 ? AssetImage('placeholder.jpg')
+              image: event['featured_media'] == 0 ? 'assets/placeholder.jpg'
               : event["_embedded"]["wp:featuredmedia"][0]["source_url"],
               fit: BoxFit.contain,
               placeholder: transparentImage,
