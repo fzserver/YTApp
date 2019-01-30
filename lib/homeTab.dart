@@ -129,8 +129,12 @@ class _HomeState extends State<Home> {
                   padding: EdgeInsets.symmetric(vertical: 2.0),
                   child: Marquee(
 //                    test:"asdfsadfasfd"
-                    texts: ["test 1","test 2","test 3"],
-                    blankSpace: 10.0, // to add space between text
+                    texts: [
+                      "Sri Guru Gobind Singh Sahib Ji",
+                      "Sri Guru Granth Sahib Ji",
+                      "Sri Dasam Guru Granth Sahib Ji"
+                      ],
+                    blankSpace: 5.0, // to add space between text
                     style: TextStyle(color: Colors.yellow),
                   ),
                 ),
