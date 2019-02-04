@@ -27,7 +27,7 @@ class _YTPlayerState extends State<YTPlayer> {
       child: YoutubePlayer(
         source: widget.videoID,
         quality: YoutubeQuality.HD,
-        showThumbnail: true,
+        context: this.context,
         // callbackController: (controller) {
         //   _controller = controller;
         // },

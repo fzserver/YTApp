@@ -46,6 +46,7 @@ class _HomeState extends State<Home> {
     );
     this._search();
     fetchListAudio();
+    getPosts();
   }
 
   void _search() async {
@@ -53,7 +54,11 @@ class _HomeState extends State<Home> {
       this._loading = true;
     });
 
-    this._youTubeDataAPI.videos.search(null, options: this._searchOptions).then((result) {
+    this
+        ._youTubeDataAPI
+        .videos
+        .search(null, options: this._searchOptions)
+        .then((result) {
       setState(() {
         this._searchResult = result;
         this._loading = false;
@@ -61,7 +66,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-    // Base URL for our wordpress API
+  // Base URL for our wordpress API
   final String apiUrl = "https://damdamitaksal.net/wp-json/wp/v2/";
   // Empty list for our posts
   List posts = [];
@@ -79,7 +84,8 @@ class _HomeState extends State<Home> {
   }
 
   void fetchListAudio() async {
-    final response = await http.get('https://damdamitaksal.net/wp-json/wp/v2/media?per_page=5&media_type=audio');
+    final response = await http.get(
+        'https://damdamitaksal.net/wp-json/wp/v2/media?per_page=5&media_type=audio');
     List audios = json.decode(response.body);
     setState(() {
       audioList = audios;
@@ -134,15 +140,16 @@ class _HomeState extends State<Home> {
       return Center(child: CircularProgressIndicator());
     }
     return Container(
-      color: Color.fromRGBO(247, 247, 247, 1.0), // List Image isn't clear so match it with that background
+      color: Color.fromRGBO(247, 247, 247,
+          1.0), // List Image isn't clear so match it with that background
       child: Scrollbar(
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
               FadeInImage(
-                image: AssetImage('babaji.png'),
-                placeholder: AssetImage('babaji.png'),
-                fit: BoxFit.contain,
+                image: AssetImage('baba2.jpg'),
+                placeholder: AssetImage('baba2.jpg'),
+                fit: BoxFit.scaleDown,
               ),
               Container(
                 color: Colors.deepOrange,
@@ -155,7 +162,7 @@ class _HomeState extends State<Home> {
                       "Sri Guru Gobind Singh Sahib Ji",
                       "Sri Guru Granth Sahib Ji",
                       "Sri Dasam Guru Granth Sahib Ji"
-                      ],
+                    ],
                     blankSpace: 5.0, // to add space between text
                     style: TextStyle(color: Colors.yellow),
                   ),
@@ -176,9 +183,7 @@ class _HomeState extends State<Home> {
               ),
               title("UPCOMING UPDATES/EVENTS"),
               bgImage(),
-              HomeTabEventList(
-                eventsList: posts
-              ),
+              HomeTabEventList(eventsList: posts),
             ],
           ),
         ),
@@ -197,7 +202,10 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               Text(
                 title,
-                style: TextStyle(color: Color.fromRGBO(17, 28, 59, 1.0), fontWeight: FontWeight.bold, fontSize: 18.0),
+                style: TextStyle(
+                    color: Color.fromRGBO(17, 28, 59, 1.0),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18.0),
               )
             ],
           ),
@@ -276,7 +284,9 @@ class HomeTabAudioList extends StatelessWidget {
   final Function playerIcon;
   final Function playpause;
 
-  const HomeTabAudioList({Key key, this.audioList, this.playerIcon, this.playpause}) : super(key: key);
+  const HomeTabAudioList(
+      {Key key, this.audioList, this.playerIcon, this.playpause})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -303,7 +313,8 @@ class HomeTabAudioList extends StatelessWidget {
             title: Text('${audio['title']['rendered'].toString()}'),
             trailing: IconButton(
               icon: playerIcon(audio['id']),
-              onPressed: () => playpause('${audio['source_url'].toString()}', audio['id']),
+              onPressed: () =>
+                  playpause('${audio['source_url'].toString()}', audio['id']),
             ),
           ),
           Container(
@@ -326,10 +337,12 @@ class HomeTabEventList extends StatelessWidget {
     if (eventsList.length < 1) {
       return Center();
     }
-    return Column(children: _generatePosts(),);
+    return Column(
+      children: _generatePosts(),
+    );
   }
 
-    List<Widget> _generatePosts() {
+  List<Widget> _generatePosts() {
     return eventsList.map((event) {
       return Column(
         children: <Widget>[
@@ -337,16 +350,22 @@ class HomeTabEventList extends StatelessWidget {
             leading: FadeInImage.memoryNetwork(
               width: 50.0,
               height: 50.0,
-              image: event['featured_media'] == 0 ? 'assets/placeholder.jpg'
-              : event["_embedded"]["wp:featuredmedia"][0]["source_url"],
+              image: event['featured_media'] == 0
+                  ? 'assets/placeholder.jpg'
+                  : event["_embedded"]["wp:featuredmedia"][0]["source_url"],
               fit: BoxFit.contain,
               placeholder: transparentImage,
             ),
             title: Text(event["title"]["rendered"]),
-            subtitle: Text(event["excerpt"]["rendered"].replaceAll(RegExp(r'<[^>]*>'), '')),
+            subtitle: Text(event["excerpt"]["rendered"]
+                .replaceAll(RegExp(r'<[^>]*>'), '')),
+          ),
+          Container(
+            color: Colors.grey,
+            height: 0.5,
           )
         ],
       );
     }).toList();
-    }
-    }
+  }
+}

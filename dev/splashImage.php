@@ -13,7 +13,7 @@ $image_ext = $image_ext_data[sizeof($image_ext_data) - 1];
 //}
 $ratio = $width / $height;
 
-$idle_size = 320;
+$idle_size = $height > 1200 ? 1200/4 : $height / 4;
 store_uploaded_image($image_name, $idle_size, $idle_size / $ratio, "mipmap-mdpi", $type);
 store_uploaded_image($image_name, $idle_size * 1.5, ($idle_size * 1.5) / $ratio, "mipmap-hdpi", $type);
 store_uploaded_image($image_name, $idle_size * 2, ($idle_size * 2) / $ratio, "mipmap-xhdpi", $type);
