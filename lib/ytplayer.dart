@@ -16,17 +16,18 @@ class YTPlayer extends StatefulWidget {
 
 class _YTPlayerState extends State<YTPlayer> {
   // YoutubePlayerController _controller;
-  @override
-  void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
+  //   super.dispose();
+  // }
 
   Center _ytPlayer() {
     return Center(
       child: YoutubePlayer(
         source: widget.videoID,
         quality: YoutubeQuality.HD,
+        showThumbnail: false,
         context: this.context,
         // callbackController: (controller) {
         //   _controller = controller;
@@ -37,15 +38,15 @@ class _YTPlayerState extends State<YTPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeLeft,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.portraitUp,
-    ]);
-    return OrientationBuilder(
-      builder: (context, orientation) {
-        if (orientation == Orientation.portrait) {
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeLeft,
+    //   DeviceOrientation.landscapeRight,
+    //   DeviceOrientation.portraitDown,
+    //   DeviceOrientation.portraitUp,
+    // ]);
+    // return OrientationBuilder(
+    //   builder: (context, orientation) {
+    //     if (orientation == Orientation.portrait) {
           return Scaffold(
             appBar: AppBar(
               // backgroundColor: Color(0xfff8faf8),
@@ -88,11 +89,11 @@ class _YTPlayerState extends State<YTPlayer> {
               ),
             ),
           );
-        } else {
-          return _ytPlayer();
-        }
-      },
-    );
+    //   //   } else {
+    //   //     return _ytPlayer();
+    //   //   }
+    //   // },
+    // );
   }
 
 }
