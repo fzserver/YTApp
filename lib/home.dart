@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share/share.dart';
 import 'package:ytapp/audios.dart';
+import 'package:ytapp/contact.dart';
 import 'package:ytapp/events.dart';
 import 'package:ytapp/gallery.dart';
 import 'package:ytapp/history.dart';
@@ -28,7 +29,7 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
   void initState() {
     super.initState();
     playPrayer();
-    _tabController = TabController(vsync: this, initialIndex: 0, length: 6);
+    _tabController = TabController(vsync: this, initialIndex: 0, length: 7);
   }
 
   @override
@@ -73,16 +74,13 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
           labelStyle: TextStyle(fontWeight: FontWeight.bold),
           unselectedLabelColor: Colors.white,
           tabs: <Widget>[
-            Tab(
-              text: 'HOME',
-            ),
-            Tab(
-              text: 'VIDEOS',
-            ),
+            Tab(text: 'HOME'),
+            Tab(text: 'VIDEOS'),
             Tab(text: 'AUDIOS'),
             Tab(text: 'UPCOMING EVENTS'),
             Tab(text: 'PHOTO GALLERY'),
             Tab(text: 'HISTORY'),
+            Tab(text: 'CONTACT US'),
           ],
         ),
       ),
@@ -96,6 +94,7 @@ class _YTHomeState extends State<YTHome> with SingleTickerProviderStateMixin {
             Events(),
             Gallery(),
             History(),
+            Contact(),
           ],
         ),
       ),

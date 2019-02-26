@@ -10,7 +10,7 @@ description: Youtube Player App.
 version: 1.0.0+1
 
 environment:
-  sdk: "<3.0.0"
+  sdk: ">=2.0.0-dev.68.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -27,6 +27,10 @@ dependencies:
   audioplayers: ^0.8.0
   flutter_launcher_icons: ^0.7.0
   marquee: ^1.1.0
+  flutter_html: ^0.9.4
+  # google_maps_flutter: ^0.2.0+3
+  # fluttery:
+  # fluttery_audio:
 
 flutter_icons:
   android: "launcher_icon"
@@ -61,6 +65,7 @@ flutter:
    - audio.mp3
    - repeater.mp3
    - placeholder.jpg
+   - music.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ytapp/audio.dart';
 
 enum PlayerStatus { Playing, Paused, Resume, Stop }
 
@@ -13,11 +14,7 @@ class Audios extends StatefulWidget {
 
 class _AudiosState extends State<Audios> {
   List audioList;
-  AudioPlayer audioPlayer = AudioPlayer();
   bool loading;
-  int playaudio;
-  int currentPlaying;
-  PlayerStatus _playerStatus;
 
   @override
   void initState() {
@@ -28,7 +25,6 @@ class _AudiosState extends State<Audios> {
 
   @override
   void dispose() {
-    audioPlayer.stop();
     super.dispose();
   }
 
@@ -38,44 +34,8 @@ class _AudiosState extends State<Audios> {
     List audios = json.decode(response.body);
     setState(() {
       audioList = audios;
-      playaudio = 0;
       loading = false;
-      currentPlaying = -1;
-      _playerStatus = PlayerStatus.Stop;
     });
-  }
-
-  playpause(String url, int audioIndex) async {
-    PlayerStatus _playerStatusUpdate;
-    if (audioIndex == currentPlaying) {
-      if (_playerStatus == PlayerStatus.Playing) {
-        await audioPlayer.pause();
-        _playerStatusUpdate = PlayerStatus.Paused;
-      } else if (_playerStatus == PlayerStatus.Paused) {
-        await audioPlayer.resume();
-        _playerStatusUpdate = PlayerStatus.Playing;
-      }
-    } else {
-      await audioPlayer.play(url);
-      _playerStatusUpdate = PlayerStatus.Playing;
-    }
-    setState(() {
-      currentPlaying = audioIndex;
-      _playerStatus = _playerStatusUpdate;
-    });
-  }
-
-  Widget playerIcon(index) {
-    if (index == currentPlaying && _playerStatus == PlayerStatus.Playing) {
-      return Icon(
-        Icons.pause,
-        color: Colors.deepOrangeAccent,
-      );
-    }
-    return Icon(
-      Icons.play_arrow,
-      color: Colors.deepOrange,
-    );
   }
 
   @override
@@ -106,19 +66,14 @@ class _AudiosState extends State<Audios> {
                         child: FadeInImage(
                           width: 50.0,
                           height: 50.0,
-                          image: AssetImage('album.png'),
+                          image: AssetImage('music.png'),
                           fit: BoxFit.contain,
-                          placeholder: AssetImage('album.png'),
+                          placeholder: AssetImage('music.png'),
                         ),
                       ),
                       title: Text(
                           '${audioList[index]['title']['rendered'].toString()}'),
-                      trailing: IconButton(
-                        icon: playerIcon(index),
-                        onPressed: () => playpause(
-                            '${audioList[index]['source_url'].toString()}',
-                            index),
-                      ),
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => SingleAudio('${audioList[index]['source_url'].toString()}')))
                     );
                   },
                 );

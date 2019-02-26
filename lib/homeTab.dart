@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:marquee/marquee.dart';
+import 'package:ytapp/post.dart';
 import 'package:ytapp/transparent.dart';
 import 'package:ytapp/youtube_data_api.dart';
 import 'package:ytapp/ytplayer.dart';
@@ -73,7 +74,7 @@ class _HomeState extends State<Home> {
 
   // Function to fetch list of posts
   void getPosts() async {
-    var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed"),
+    var res = await http.get(Uri.encodeFull(apiUrl + "posts?_embed&per_page=3"),
         headers: {"Accept": "application/json"});
 
     // fill our posts list with results and update state
@@ -306,9 +307,9 @@ class HomeTabAudioList extends StatelessWidget {
             leading: FadeInImage(
               width: 50.0,
               height: 50.0,
-              image: AssetImage('album.png'),
+              image: AssetImage('music.png'),
               fit: BoxFit.contain,
-              placeholder: AssetImage('album.png'),
+              placeholder: AssetImage('music.png'),
             ),
             title: Text('${audio['title']['rendered'].toString()}'),
             trailing: IconButton(
@@ -338,15 +339,26 @@ class HomeTabEventList extends StatelessWidget {
       return Center();
     }
     return Column(
-      children: _generatePosts(),
+      children: _generatePosts(context),
     );
   }
 
-  List<Widget> _generatePosts() {
+  List<Widget> _generatePosts(BuildContext context) {
     return eventsList.map((event) {
       return Column(
         children: <Widget>[
-          ListTile(
+          InkWell(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Post(
+                            event["featured_media"] == 0
+                                ? 'placeholder.jpg'
+                                : event["_embedded"]["wp:featuredmedia"]
+                                    [0]["source_url"],
+                            event["title"]["rendered"],
+                            event["content"]["rendered"]))),
+                            child: ListTile(
             leading: FadeInImage.memoryNetwork(
               width: 50.0,
               height: 50.0,
@@ -359,7 +371,7 @@ class HomeTabEventList extends StatelessWidget {
             title: Text(event["title"]["rendered"]),
             subtitle: Text(event["excerpt"]["rendered"]
                 .replaceAll(RegExp(r'<[^>]*>'), '')),
-          ),
+          ),),
           Container(
             color: Colors.grey,
             height: 0.5,
